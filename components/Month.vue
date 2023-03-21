@@ -1,10 +1,11 @@
 <template>
     <div class="container md:mx-auto mt-10" v-for="mt in meet">
+        <h1 class="text-slate-600 text-xl mb-4">CALENDAR</h1>
         <div class="flex justify-between px-5">
-            <h1 class="text-slate-600 text-xl">{{ currentMonth }}</h1>
+            <p class="text-slate-600">{{ currentMonth }}</p>
             <div>
-                <button class="w-7" @click="decrement" type="button">&#8592;</button>
-                <button class="w-7" @click="implement" type="button">&#8594;</button>
+                <button class="w-7 hover:bg-red-100 focus:bg-red-100" @click="decrement" type="button">&#8592;</button>
+                <button class="w-7 hover:bg-red-100 focus:bg-red-100" @click="implement" type="button">&#8594;</button>
             </div>
         </div>
         <ul class="grid grid-cols-7 mt-1 text-xs leading-6 text-center text-gray-500">
@@ -41,12 +42,19 @@
         </div>
     </div>
 </template>
-<!-- , `col-start-${getDay(it)}`:  -->
+
 <script setup>
 
 import {startOfToday, isSameDay, isSameMonth, isToday, parseISO, startOfWeek,
-        eachDayOfInterval, parse, add, endOfMonth, format, getTime, getDay, endOfWeek} from 'date-fns';
+        eachDayOfInterval, parse, add, endOfMonth, format, endOfWeek} from 'date-fns';
 import {useState} from '../helpers/useState';
+
+setInterval(()=> {
+    const hours = new Date().getUTCHours();
+    const minutes = new Date().getUTCMinutes();
+    const seconds = new Date().getUTCSeconds();
+setDataTime(`${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds} (GMT)`)
+}, 1000)
 
 const meet = [
 {
@@ -69,14 +77,6 @@ const daysMonth = (value) => {
 
 const [countDays, setCountDays] = useState(daysMonth(currentMonth._value))
 const [dataTime, setDataTime] = useState(null)
-
-setInterval(()=> {
-    const hours = new Date().getUTCHours();
-    const minutes = new Date().getUTCMinutes();
-    const seconds = new Date().getUTCSeconds();
-setDataTime(`${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds} (GMT)`)
-}, 1000)
-
 
 const decrement = () => {
     const result = add(parse(currentMonth._value, 'MMMM-yyyy', new Date()), {months: -1})
