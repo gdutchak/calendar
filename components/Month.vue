@@ -1,5 +1,6 @@
 <template>
-    <div class="container md:mx-auto mt-10" v-for="mt in meet">
+    <Clock/>
+    <div class="container md:mx-auto" v-for="mt in meet">
         <h1 class="text-slate-600 text-xl mb-4">CALENDAR</h1>
         <div class="flex justify-between px-5">
             <p class="text-slate-600">{{ currentMonth }}</p>
@@ -30,10 +31,6 @@
             {{ format(it, 'd') }}
             </li>
         </ul>
-        <div class="mb-4">
-            <span class="mr-2.5 text-slate-600">Current time:</span>
-            <span class="text-xl font-semibold text-slate-600">{{ dataTime }}</span>
-        </div>
         <div :class="{'hidden': !showInfo, 'block': showInfo}" class="rounded border border-red-200 bg-slate-100 italic text-lg w-72 p-1.5">
             <h2>{{ mt.title }}</h2>
             <p>{{ mt.location }}</p>
@@ -46,15 +43,11 @@
 <script setup>
 
 import {startOfToday, isSameDay, isSameMonth, isToday, parseISO, startOfWeek,
-        eachDayOfInterval, parse, add, endOfMonth, format, endOfWeek} from 'date-fns';
+        eachDayOfInterval, parse, endOfMonth, format, endOfWeek, add} from 'date-fns';
 import {useState} from '../helpers/useState';
+import Clock from './Clock.vue';
 
-setInterval(()=> {
-    const hours = new Date().getUTCHours();
-    const minutes = new Date().getUTCMinutes();
-    const seconds = new Date().getUTCSeconds();
-setDataTime(`${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds} (GMT)`)
-}, 1000)
+
 
 const meet = [
 {
@@ -66,6 +59,7 @@ const meet = [
 ]
 
 const today = startOfToday()
+
 const [currentMonth, setCurrentMonth] = useState(format(today, 'MMMM-yyyy'))
 const [showInfo, setShowInfo] = useState(false)
 
@@ -76,7 +70,6 @@ const daysMonth = (value) => {
 })}
 
 const [countDays, setCountDays] = useState(daysMonth(currentMonth._value))
-const [dataTime, setDataTime] = useState(null)
 
 const decrement = () => {
     const result = add(parse(currentMonth._value, 'MMMM-yyyy', new Date()), {months: -1})
@@ -98,8 +91,6 @@ const detailsMeet = (elem, meet, value) => {
         setShowInfo(false)
     }
 }
-
-
 
 </script>
 
